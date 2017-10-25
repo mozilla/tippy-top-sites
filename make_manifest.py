@@ -1,5 +1,6 @@
 import json
 import re
+import zipfile
 from StringIO import StringIO
 from urlparse import urlparse
 
@@ -11,16 +12,21 @@ from robobrowser import RoboBrowser
 ICON_SELECTOR = 'link[rel=apple-touch-icon], link[rel=apple-touch-icon-precomposed], link[rel="icon shortcut"], link[rel="shortcut icon"], link[rel="icon"]'
 FIREFOX_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:58.0) Gecko/20100101 Firefox/58.0'
 IPHONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Version/10.0 Mobile/14D27 Safari/602.1'
+ALEXA_DATA_URL = 'http://s3.amazonaws.com/alexa-static/top-1m.csv.zip'
 
 
-# TODO: FIXME: use the alexa API to get alexa list. Scraping limits us to only top 50.
-def fetch_alexa_top50():
-    hostnames = []
-    browser = RoboBrowser(user_agent=FIREFOX_UA)
-    browser.open('https://www.alexa.com/topsites')
-    for cell in browser.select('.DescriptionCell > p'):
-        hostnames.append(cell.text.strip().lower())
-    return hostnames
+def _fetch_alexa_top_sites():
+    r = requests.get(ALEXA_DATA_URL)
+    z = zipfile.ZipFile(StringIO(r.content))
+    rows = StringIO(z.read('top-1m.csv'))
+    for row in rows:
+        rank, domain = row.split(',')
+        yield (int(rank), domain.strip())
+
+
+def alexa_top_sites(count=1000):
+    top = _fetch_alexa_top_sites()
+    return [top.next() for x in xrange(count)]
 
 
 def fetch_icons(url, user_agent=IPHONE_UA):
@@ -71,7 +77,7 @@ def get_best_image(images):
 
 def run():
     results = []
-    for hostname in fetch_alexa_top50():
+    for _, hostname in alexa_top_sites(1000):
         url = 'https://{hostname}'.format(hostname=hostname)
         icons = fetch_icons(url)
         if len(icons) == 0:
