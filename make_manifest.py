@@ -4,6 +4,7 @@ import zipfile
 from StringIO import StringIO
 from urlparse import urlparse
 
+import click
 import requests
 from PIL import Image
 from robobrowser import RoboBrowser
@@ -75,7 +76,8 @@ def get_best_image(images):
     return image_url
 
 
-def run():
+@click.command()
+def make_manifest():
     results = []
     for _, hostname in alexa_top_sites(1000):
         url = 'https://{hostname}'.format(hostname=hostname)
@@ -97,4 +99,4 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    make_manifest()
