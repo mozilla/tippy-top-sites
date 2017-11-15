@@ -32,7 +32,7 @@ def alexa_top_sites(count=1000):
 
 def fetch_icons(url, user_agent=IPHONE_UA):
     icons = []
-    browser = RoboBrowser(user_agent=user_agent)
+    browser = RoboBrowser(user_agent=user_agent, parser='html.parser')
     try:
         browser.open(url)
         for link in browser.select(ICON_SELECTOR):
