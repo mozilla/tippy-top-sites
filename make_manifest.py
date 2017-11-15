@@ -92,7 +92,6 @@ def make_manifest():
             continue
         results.append({
             'image_url': icon,
-            'title': hostname.split('.')[0],
             'url': url
         })
     print json.dumps(results, indent=4)
