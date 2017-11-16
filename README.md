@@ -11,6 +11,7 @@ Usage: make_manifest.py [OPTIONS]
 
 Options:
   --count INTEGER         Number of sites from Alexa Top Sites
+  --loadrawsitedata TEXT  Load the full data from the filename specified
   --saverawsitedata TEXT  Save the full data to the filename specified
   --help                  Show this message and exit.
 

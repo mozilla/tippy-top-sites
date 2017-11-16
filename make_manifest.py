@@ -73,7 +73,7 @@ def fix_url(url):
     return fixed
 
 
-def get_best_image(images):
+def get_best_icon(images):
     image_url = None
     image_width = 0
     for image in images:
@@ -109,9 +109,9 @@ def get_best_image(images):
     return image_url
 
 
-def collect_icons_for_alexa_top(count):
+def collect_icons_for_alexa_top(count, extra_domains=None):
     results = []
-    for rank, hostname in alexa_top_sites(count) + [(-1, x) for x in DOMAIN_WHITELIST]:
+    for rank, hostname in alexa_top_sites(count) + [(-1, x) for x in extra_domains or []]:
         url = 'https://{hostname}'.format(hostname=hostname)
         icons = fetch_icons(url)
         if len(icons) == 0:
@@ -122,36 +122,43 @@ def collect_icons_for_alexa_top(count):
             'hostname': hostname,
             'url': url,
             'icons': icons,
-            'rank': rank
+            'rank': rank,
+            'best_icon': get_best_icon(icons)
         })
     return results
 
 
 @click.command()
 @click.option('--count', default=10, help='Number of sites from Alexa Top Sites')
+@click.option('--loadrawsitedata', help='Load the full data from the filename specified')
 @click.option('--saverawsitedata', help='Save the full data to the filename specified')
-def make_manifest(count, saverawsitedata):
+def make_manifest(count, saverawsitedata, loadrawsitedata):
     results = []
-    sites_with_icons = collect_icons_for_alexa_top(count);
-    if saverawsitedata:
-        with open(saverawsitedata, 'w') as outfile:
-            json.dump(sites_with_icons, outfile, indent=4)
 
-    for site in sites_with_icons:
-        if site.get('hostname') in DOMAIN_BLACKLIST:
+    if loadrawsitedata:
+        with open(loadrawsitedata) as infile:
+            sites_with_icons = json.loads(infile.read())
+    else:
+        sites_with_icons = collect_icons_for_alexa_top(count, extra_domains=DOMAIN_WHITELIST);
+        if saverawsitedata:
+            with open(saverawsitedata, 'w') as outfile:
+                json.dump(sites_with_icons, outfile, indent=4)
+
+    for site in sites_with_icons[:count]:
+        hostname = site.get('hostname')
+        if hostname in DOMAIN_BLACKLIST:
             continue
         url = site.get('url')
-        icons = site.get('icons')
-        icon = get_best_image(icons)
+        icon = site.get('best_icon')
         if icon is None:
             continue
         existing = next((x for x in results if x.get('image_url') == icon), None)
         if existing:
-            existing.get('urls').append(url)
+            existing.get('domains').append(hostname)
         else:
             results.append({
                 'image_url': icon,
-                'urls': [url]
+                'domains': [hostname]
             })
 
     click.echo(json.dumps(results, indent=4))
