@@ -69,7 +69,12 @@ def get_best_image(images):
         if width is None:
             try:
                 response = requests.get(url, headers={'User-agent': FIREFOX_UA})
-                # TODO: FIXME: Check for SVG
+
+                # Check if it's an SVG without a mask. Firefox doesn't support masked icons yet.
+                if response.headers.get('Content-Type') == 'image/svg+xml' and not image.get('mask'):
+                    # If it is. We want it. We are done here.
+                    return image_url
+
                 with Image.open(StringIO(response.content)) as img:
                     width, _ = img.size
             except:
