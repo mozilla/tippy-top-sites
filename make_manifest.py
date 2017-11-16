@@ -58,43 +58,76 @@ def get_best_image(images):
     image_url = None
     image_width = 0
     for image in images:
-        url = fix_url(image['href'])
-        try:
-            response = requests.get(url, headers={'User-agent': FIREFOX_UA})
-            with Image.open(StringIO(response.content)) as img:
-                width, height = img.size
-                if width > image_width:
-                    image_url = url
-                    image_width = width
-        except:
-            pass
+        url = fix_url(image.get('href'))
+        width = None
+        sizes = image.get('sizes')
+        if sizes:
+            try:
+                width = int(sizes.split('x')[0])
+            except:
+                pass
+        if width is None:
+            try:
+                response = requests.get(url, headers={'User-agent': FIREFOX_UA})
+                # TODO: FIXME: Check for SVG
+                with Image.open(StringIO(response.content)) as img:
+                    width, _ = img.size
+            except:
+                pass
+        if width and width > image_width:
+            image_url = url
+            image_width = width
 
-    if image_width < 90:
-        # We don't want any images under 90px
+    if image_width < 96:
+        # We don't want any images under 96px
         image_url = None
 
     return image_url
 
 
-@click.command()
-def make_manifest():
+def collect_icons_for_alexa_top(count):
     results = []
-    for _, hostname in alexa_top_sites(1000):
+    for rank, hostname in alexa_top_sites(count):
         url = 'https://{hostname}'.format(hostname=hostname)
         icons = fetch_icons(url)
         if len(icons) == 0:
+            # Retry with http
             url = 'http://{hostname}'.format(hostname=hostname)
             icons = fetch_icons(url)
-        if len(icons) == 0:
-            continue
+        results.append({
+            'url': url,
+            'icons': icons,
+            'rank': rank
+        })
+    return results
+
+
+@click.command()
+@click.option('--count', default=10, help='Number of sites from Alexa Top Sites')
+@click.option('--saverawsitedata', help='Save the full data to the filename specified')
+def make_manifest(count, saverawsitedata):
+    results = []
+    sites_with_icons = collect_icons_for_alexa_top(count);
+    if saverawsitedata:
+        with open(saverawsitedata, 'w') as outfile:
+            json.dump(sites_with_icons, outfile, indent=4)
+
+    for site in sites_with_icons:
+        url = site.get('url')
+        icons = site.get('icons')
         icon = get_best_image(icons)
         if icon is None:
             continue
-        results.append({
-            'image_url': icon,
-            'url': url
-        })
-    print json.dumps(results, indent=4)
+        existing = next((x for x in results if x.get('image_url') == icon), None)
+        if existing:
+            existing.get('urls').append(url)
+        else:
+            results.append({
+                'image_url': icon,
+                'urls': [url]
+            })
+
+    click.echo(json.dumps(results, indent=4))
 
 
 if __name__ == '__main__':
