@@ -14,6 +14,25 @@ ICON_SELECTOR = 'link[rel=apple-touch-icon], link[rel=apple-touch-icon-precompos
 FIREFOX_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:58.0) Gecko/20100101 Firefox/58.0'
 IPHONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Version/10.0 Mobile/14D27 Safari/602.1'
 ALEXA_DATA_URL = 'http://s3.amazonaws.com/alexa-static/top-1m.csv.zip'
+# Domains we want to exclude
+DOMAIN_BLACKLIST = [
+    "higheurest.com",
+    "blogspot.co.id",
+    "pipeschannels.com",
+    "blogspot.mx",
+    "bestadbid.com",
+    "googlevideo.com",
+    "tqeobp89axcn.com",
+    "ioredi.com",
+    "moradu.com",
+    "fedsit.com",
+    "vebadu.com"
+]
+# Additional domains we want to include
+DOMAIN_WHITELIST = [
+    "mail.google.com",
+    "go.twitch.tv"
+]
 
 
 def _fetch_alexa_top_sites():
@@ -92,7 +111,7 @@ def get_best_image(images):
 
 def collect_icons_for_alexa_top(count):
     results = []
-    for rank, hostname in alexa_top_sites(count):
+    for rank, hostname in alexa_top_sites(count) + [(-1, x) for x in DOMAIN_WHITELIST]:
         url = 'https://{hostname}'.format(hostname=hostname)
         icons = fetch_icons(url)
         if len(icons) == 0:
@@ -100,6 +119,7 @@ def collect_icons_for_alexa_top(count):
             url = 'http://{hostname}'.format(hostname=hostname)
             icons = fetch_icons(url)
         results.append({
+            'hostname': hostname,
             'url': url,
             'icons': icons,
             'rank': rank
@@ -118,6 +138,8 @@ def make_manifest(count, saverawsitedata):
             json.dump(sites_with_icons, outfile, indent=4)
 
     for site in sites_with_icons:
+        if site.get('hostname') in DOMAIN_BLACKLIST:
+            continue
         url = site.get('url')
         icons = site.get('icons')
         icon = get_best_image(icons)
