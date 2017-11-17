@@ -182,12 +182,6 @@
     }, 
     {
         "domains": [
-            "bing.com"
-        ], 
-        "image_url": "https://www.bing.com/sa/simg/bing_p_rr_teal_min.ico"
-    }, 
-    {
-        "domains": [
             "ebay.com", 
             "ebay.de", 
             "ebay.co.uk", 
@@ -3278,7 +3272,7 @@
         "domains": [
             "prom.ua"
         ], 
-        "image_url": "https://static-cache.ua.uaprom.net/image/portal/icons/apple-touch-icon.png?r=152ed17b92f04bee05235f52cb6b9e8d"
+        "image_url": "https://static-cache.ua.uaprom.net/image/portal/icons/favicon.svg?r=cd072736baf8c2957bfc9272153b1002"
     }, 
     {
         "domains": [
@@ -5511,7 +5505,7 @@
         "domains": [
             "vulture.com"
         ], 
-        "image_url": "https://cache.nymag.com/media/vulture/icon.196x196.png"
+        "image_url": "https://cache.nymag.com/media/vulture/icon.square.svg"
     }, 
     {
         "domains": [

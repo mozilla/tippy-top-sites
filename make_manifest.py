@@ -95,9 +95,9 @@ def get_best_icon(images):
                 response = requests.get(url, headers={'User-agent': FIREFOX_UA})
 
                 # Check if it's an SVG without a mask. Firefox doesn't support masked icons yet.
-                if response.headers.get('Content-Type') == 'image/svg+xml' and not image.get('mask'):
+                if response.headers.get('Content-Type') == 'image/svg+xml' and not 'mask' in image:
                     # If it is. We want it. We are done here.
-                    return image_url
+                    return url
 
                 with Image.open(StringIO(response.content)) as img:
                     width, _ = img.size
