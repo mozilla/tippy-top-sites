@@ -201,7 +201,8 @@
     }, 
     {
         "domains": [
-            "twitch.tv"
+            "twitch.tv", 
+            "go.twitch.tv"
         ], 
         "image_url": "https://m.twitch.tv/apple-touch-icon.png"
     }, 

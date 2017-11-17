@@ -152,7 +152,7 @@ def make_manifest(count, saverawsitedata, loadrawsitedata):
             with open(saverawsitedata, 'w') as outfile:
                 json.dump(sites_with_icons, outfile, indent=4)
 
-    for site in sites_with_icons[:count]:
+    for site in sites_with_icons:
         hostname = site.get('hostname')
         if hostname in DOMAIN_BLACKLIST:
             continue
