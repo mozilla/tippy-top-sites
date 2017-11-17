@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 import zipfile
 from StringIO import StringIO
@@ -34,6 +35,8 @@ DOMAIN_WHITELIST = [
     "go.twitch.tv"
 ]
 
+logging.basicConfig(filename='debug.log',level=logging.INFO)
+
 
 def _fetch_alexa_top_sites():
     r = requests.get(ALEXA_DATA_URL)
@@ -45,11 +48,13 @@ def _fetch_alexa_top_sites():
 
 
 def alexa_top_sites(count=1000):
+    logging.info('Fetching Alexa top {count} sites'.format(count=count))
     top = _fetch_alexa_top_sites()
     return [top.next() for x in xrange(count)]
 
 
 def fetch_icons(url, user_agent=IPHONE_UA):
+    logging.info('Fetching icons for {url}'.format(url=url))
     icons = []
     browser = RoboBrowser(user_agent=user_agent, parser='html.parser')
     try:
@@ -125,6 +130,7 @@ def collect_icons_for_alexa_top(count, extra_domains=None):
             'rank': rank,
             'best_icon': get_best_icon(icons)
         })
+    logging.info('Done fetching icons')
     return results
 
 
@@ -136,11 +142,13 @@ def make_manifest(count, saverawsitedata, loadrawsitedata):
     results = []
 
     if loadrawsitedata:
+        logging.info('Loading raw icon data from {filename}'.format(filename=loadrawsitedata))
         with open(loadrawsitedata) as infile:
             sites_with_icons = json.loads(infile.read())
     else:
         sites_with_icons = collect_icons_for_alexa_top(count, extra_domains=DOMAIN_WHITELIST);
         if saverawsitedata:
+            logging.info('Saving raw icon data to {filename}'.format(filename=saverawsitedata))
             with open(saverawsitedata, 'w') as outfile:
                 json.dump(sites_with_icons, outfile, indent=4)
 
