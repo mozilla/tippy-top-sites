@@ -39,7 +39,7 @@ logging.basicConfig(filename='debug.log',level=logging.INFO)
 
 
 def _fetch_alexa_top_sites():
-    r = requests.get(ALEXA_DATA_URL)
+    r = requests.get(ALEXA_DATA_URL, timeout=60)
     z = zipfile.ZipFile(StringIO(r.content))
     rows = StringIO(z.read('top-1m.csv'))
     for row in rows:
@@ -58,7 +58,7 @@ def fetch_icons(url, user_agent=IPHONE_UA):
     icons = []
     browser = RoboBrowser(user_agent=user_agent, parser='html.parser')
     try:
-        browser.open(url)
+        browser.open(url, timeout=60)
         for link in browser.select(ICON_SELECTOR):
             icon = link.attrs
             icon_url = icon['href']
@@ -92,7 +92,7 @@ def get_best_icon(images):
                 pass
         if width is None:
             try:
-                response = requests.get(url, headers={'User-agent': FIREFOX_UA})
+                response = requests.get(url, headers={'User-agent': FIREFOX_UA}, timeout=60)
 
                 # Check if it's an SVG without a mask. Firefox doesn't support masked icons yet.
                 if response.headers.get('Content-Type') == 'image/svg+xml' and not 'mask' in image:
