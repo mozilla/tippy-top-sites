@@ -1,5 +1,5 @@
-# tippy-top-playground
-Experimental stuff related to tippy top services
+# tippy-top-sites
+Scripts and tools related to tippy top services 
 
 ## make_manifest.py
 To run the manifest generator script. In a new virtualenv:
