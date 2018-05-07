@@ -10,6 +10,8 @@ import requests
 from PIL import Image
 from robobrowser import RoboBrowser
 
+from nsfw import is_nsfw
+
 
 ICON_SELECTOR = 'link[rel=apple-touch-icon], link[rel=apple-touch-icon-precomposed], link[rel="icon shortcut"], link[rel="shortcut icon"], link[rel="icon"]'
 FIREFOX_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:58.0) Gecko/20100101 Firefox/58.0'
@@ -117,6 +119,10 @@ def get_best_icon(images):
 def collect_icons_for_alexa_top(count, extra_domains=None):
     results = []
     for rank, hostname in alexa_top_sites(count) + [(-1, x) for x in extra_domains or []]:
+        # Skip NSFW and blacklisted sites
+        if is_nsfw(hostname) or hostname in DOMAIN_BLACKLIST:
+            continue
+
         url = 'https://{hostname}'.format(hostname=hostname)
         icons = fetch_icons(url)
         if len(icons) == 0:
@@ -154,8 +160,6 @@ def make_manifest(count, saverawsitedata, loadrawsitedata):
 
     for site in sites_with_icons:
         hostname = site.get('hostname')
-        if hostname in DOMAIN_BLACKLIST:
-            continue
         url = site.get('url')
         icon = site.get('best_icon')
         if icon is None:
@@ -168,6 +172,9 @@ def make_manifest(count, saverawsitedata, loadrawsitedata):
                 'image_url': icon,
                 'domains': [hostname]
             })
+
+    # Sort alphabetically
+    results = sorted(results, key=lambda site: site['domains'][0])
 
     click.echo(json.dumps(results, indent=4))
 
