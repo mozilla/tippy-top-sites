@@ -25,7 +25,7 @@ fetch(myRequest)
   .then(function(response) { return response.json(); })
   .then(function(data) {
     ReactDOM.render(
-      <Sites sites={data} />,
-      document.getElementById("root")
+      React.createElement(Sites, {sites: data}, null),
+      document.getElementById('root')
     );
   });
