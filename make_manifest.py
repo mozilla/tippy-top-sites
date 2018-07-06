@@ -1,9 +1,9 @@
 import json
 import logging
 import re
+import urlparse
 import zipfile
 from StringIO import StringIO
-from urlparse import urlparse
 
 import click
 import requests
@@ -65,8 +65,7 @@ def fetch_icons(url, user_agent=IPHONE_UA):
             icon = link.attrs
             icon_url = icon['href']
             if not icon_url.startswith('http') and not icon_url.startswith('//'):
-                parsed_url = urlparse(browser.url)
-                icon['href'] = '{scheme}://{hostname}{path}'.format(scheme=parsed_url.scheme, hostname=parsed_url.netloc, path=icon_url)
+                icon['href'] = urlparse.urljoin(browser.url, icon_url)
             icons.append(icon)
     except:
         pass
