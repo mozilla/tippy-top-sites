@@ -13,7 +13,8 @@ from robobrowser import RoboBrowser
 from nsfw import is_nsfw
 
 
-ICON_SELECTOR = 'link[rel=apple-touch-icon], link[rel=apple-touch-icon-precomposed], link[rel="icon shortcut"], link[rel="shortcut icon"], link[rel="icon"]'
+LINK_SELECTOR = 'link[rel=apple-touch-icon], link[rel=apple-touch-icon-precomposed], link[rel="icon shortcut"], link[rel="shortcut icon"], link[rel="icon"]'
+META_SELECTOR = 'meta[name=apple-touch-icon]'
 FIREFOX_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:58.0) Gecko/20100101 Firefox/58.0'
 IPHONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Version/10.0 Mobile/14D27 Safari/602.1'
 ALEXA_DATA_URL = 'http://s3.amazonaws.com/alexa-static/top-1m.csv.zip'
@@ -61,11 +62,19 @@ def fetch_icons(url, user_agent=IPHONE_UA):
     browser = RoboBrowser(user_agent=user_agent, parser='html.parser')
     try:
         browser.open(url, timeout=60)
-        for link in browser.select(ICON_SELECTOR):
+        for link in browser.select(LINK_SELECTOR):
             icon = link.attrs
             icon_url = icon['href']
             if not icon_url.startswith('http') and not icon_url.startswith('//'):
                 icon['href'] = urlparse.urljoin(browser.url, icon_url)
+            icons.append(icon)
+        for meta in browser.select(META_SELECTOR):
+            icon = meta.attrs
+            icon_url = icon['content']
+            if not icon_url.startswith('http') and not icon_url.startswith('//'):
+                icon['href'] = urlparse.urljoin(browser.url, icon_url)
+            else:
+                icon['href'] = icon_url
             icons.append(icon)
     except:
         pass
