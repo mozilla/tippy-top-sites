@@ -2930,5 +2930,7 @@ nsfw_domains_md5 = frozenset([
     "zxsSqovedB3HT99jVblCnQ==",
     "zyA9f5J7mw5InjhcfeumAQ==",
     "QP0ioXquVviKbyKBpNqxFg==",
-    "2FeqspKjc6X086vltd7JKA=="
+    "2FeqspKjc6X086vltd7JKA==",
+    "OPF39fEDslcbZB7FIiRmIg==",
+    "P+0fy55SBktgIa3a6sZU0g=="
 ])
