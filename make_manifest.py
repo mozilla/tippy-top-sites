@@ -65,12 +65,16 @@ def fetch_icons(url, user_agent=IPHONE_UA):
         for link in browser.select(LINK_SELECTOR):
             icon = link.attrs
             icon_url = icon['href']
+            if icon_url.startswith('data:'):
+                continue
             if not icon_url.startswith('http') and not icon_url.startswith('//'):
                 icon['href'] = urlparse.urljoin(browser.url, icon_url)
             icons.append(icon)
         for meta in browser.select(META_SELECTOR):
             icon = meta.attrs
             icon_url = icon['content']
+            if icon_url.startswith('data:'):
+                continue
             if not icon_url.startswith('http') and not icon_url.startswith('//'):
                 icon['href'] = urlparse.urljoin(browser.url, icon_url)
             else:
