@@ -7,12 +7,6 @@
     },
     {
         "domains": [
-            "alibaba.com"
-        ],
-        "image_url": "https://u.alicdn.com/mobile/img/common/favicons/favicon-96x96.png"
-    },
-    {
-        "domains": [
             "amazon.co.jp"
         ],
         "image_url": "https://images-fe.ssl-images-amazon.com/images/G/09/anywhere/a_smile_196x196._CB368246755_.png"
@@ -37,21 +31,9 @@
     },
     {
         "domains": [
-            "amazon.fr"
-        ],
-        "image_url": "https://images-eu.ssl-images-amazon.com/images/G/08/anywhere/a_smile_196x196._CB368246545_.png"
-    },
-    {
-        "domains": [
             "amazon.in"
         ],
         "image_url": "https://images-eu.ssl-images-amazon.com/images/G/31/anywhere/a_smile_196x196._CB368246681_.png"
-    },
-    {
-        "domains": [
-            "amazon.it"
-        ],
-        "image_url": "https://images-eu.ssl-images-amazon.com/images/G/29/anywhere/a_smile_196x196._CB368246716_.png"
     },
     {
         "domains": [
@@ -61,9 +43,9 @@
     },
     {
         "domains": [
-            "babytree.com"
+            "atlassian.net"
         ],
-        "image_url": "http://img02.babytreeimg.com/mobile/img/common/icon-144.png"
+        "image_url": "https://wac-cdn.atlassian.com/assets/img/favicons/atlassian/apple-touch-icon-152x152.png"
     },
     {
         "domains": [
@@ -73,13 +55,20 @@
     },
     {
         "domains": [
-            "bbc.com"
+            "bankofamerica.com"
         ],
-        "image_url": "https://static.bbci.co.uk/wwhp/1.136.0/responsive/img/apple-touch/apple-touch-180.jpg"
+        "image_url": "https://www2.bac-assets.com/homepage/spa-assets/images/assets-images-global-favicon-android-chrome-192x192-CSXafb7d716.png"
     },
     {
         "domains": [
-            "blogspot.com"
+            "bbc.com"
+        ],
+        "image_url": "https://static.bbci.co.uk/wwhp/1.139.0/responsive/img/apple-touch/apple-touch-180.jpg"
+    },
+    {
+        "domains": [
+            "blogspot.com",
+            "blogger.com"
         ],
         "image_url": "https://www.blogger.com/about/favicon/android-chrome-192x192.png"
     },
@@ -87,13 +76,19 @@
         "domains": [
             "booking.com"
         ],
-        "image_url": "https://r-ec.bstatic.com/static/img/apple-touch-icon_new_lrg/c9b35bf29a75cac2f430f80a5d4bc7fd961d21a7.png"
+        "image_url": "https://r-cf.bstatic.com/static/img/apple-touch-icon_new_lrg/c9b35bf29a75cac2f430f80a5d4bc7fd961d21a7.png"
     },
     {
         "domains": [
             "bukalapak.com"
         ],
         "image_url": "https://s3.bukalapak.com/ast/wingman/icons/icon_512.a0wy000y00w.png"
+    },
+    {
+        "domains": [
+            "canva.com"
+        ],
+        "image_url": "https://static.canva.com/static/images/android-192x192.png"
     },
     {
         "domains": [
@@ -115,27 +110,9 @@
     },
     {
         "domains": [
-            "dailymotion.com"
-        ],
-        "image_url": "https://static1-ssl.dmcdn.net/images/neon/favicons/apple-icon-precomposed.png.v668e5fde9462cb3a2"
-    },
-    {
-        "domains": [
             "daum.net"
         ],
         "image_url": "https://m2.daumcdn.net/deco/comics/mtop/webicon/i120x120_201611041636.png"
-    },
-    {
-        "domains": [
-            "digikala.com"
-        ],
-        "image_url": "https://www.digikala.com/android-icon-192x192.png"
-    },
-    {
-        "domains": [
-            "douban.com"
-        ],
-        "image_url": "https://img3.doubanio.com/f/talion/7c6364aadf368dc0210173c940cfd0f64ceddc66/pics/icon/m_logo_200.png"
     },
     {
         "domains": [
@@ -145,15 +122,15 @@
     },
     {
         "domains": [
-            "duckduckgo.com"
-        ],
-        "image_url": "https://duckduckgo.com/assets/icons/meta/DDG-iOS-icon_152x152.png"
-    },
-    {
-        "domains": [
             "espn.com"
         ],
         "image_url": "https://a.espncdn.com/wireless/mw5/r1/images/bookmark-icons-v2/espn-icon-180x180.png"
+    },
+    {
+        "domains": [
+            "espncricinfo.com"
+        ],
+        "image_url": "https://a.espncdn.com/wireless/mw5/r1/images/bookmark-icons/espncricinfo_icon-180x180.min.png"
     },
     {
         "domains": [
@@ -163,22 +140,27 @@
     },
     {
         "domains": [
-            "facebook.com",
-            "fbcdn.net"
+            "facebook.com"
         ],
-        "image_url": "https://static.xx.fbcdn.net/rsrc.php/v3/ya/r/O2aKM2iSbOw.png"
+        "image_url": "https://static.xx.fbcdn.net/rsrc.php/v3/ye/r/a36n03MSzp1.png?_nc_x=Ij3Wp8lg5Kz"
     },
     {
         "domains": [
             "fandom.com"
         ],
-        "image_url": "https://static.wikia.nocookie.net/qube-assets/f2/3638/favicons/apple-touch-icon.png?v=c5003376bef2e11136ba509f18b0c4df1224c0ac"
+        "image_url": "https://static.wikia.nocookie.net/qube-assets/f2/3719/favicons/apple-touch-icon.png?v=ff35e32df2da166d06a504d531493b021f2ec4eb"
     },
     {
         "domains": [
-            "fc2.com"
+            "fiverr.com"
         ],
-        "image_url": "https://static.fc2.com/i/image/iphone/apple-touch-icon.png"
+        "image_url": "https://assetsv2.fiverrcdn.com/assets/v2_globals/apple-touch-icon-180x180-a73d5eb43f10049184360d4f9d09adfa.png"
+    },
+    {
+        "domains": [
+            "flipkart.com"
+        ],
+        "image_url": "https://img1a.flixcart.com/www/linchpin/batman-returns/images/logo_lite-cbb3574d.png"
     },
     {
         "domains": [
@@ -200,18 +182,6 @@
     },
     {
         "domains": [
-            "godaddy.com"
-        ],
-        "image_url": "https://img1.wsimg.com/ux/favicon/android-icon-192x192.png"
-    },
-    {
-        "domains": [
-            "google.ca"
-        ],
-        "image_url": "https://www.google.ca/images/branding/product_ios/3x/gsa_ios_60dp.png"
-    },
-    {
-        "domains": [
             "google.co.in"
         ],
         "image_url": "https://www.google.co.in/images/branding/product_ios/3x/gsa_ios_60dp.png"
@@ -224,12 +194,6 @@
     },
     {
         "domains": [
-            "google.co.kr"
-        ],
-        "image_url": "https://www.google.co.kr/images/branding/product_ios/3x/gsa_ios_60dp.png"
-    },
-    {
-        "domains": [
             "google.co.uk"
         ],
         "image_url": "https://www.google.co.uk/images/branding/product_ios/3x/gsa_ios_60dp.png"
@@ -237,7 +201,7 @@
     {
         "domains": [
             "google.com",
-            "dolohen.com"
+            "deloplen.com"
         ],
         "image_url": "https://www.google.com/images/branding/product_ios/3x/gsa_ios_60dp.png"
     },
@@ -258,6 +222,12 @@
             "google.com.mx"
         ],
         "image_url": "https://www.google.com.mx/images/branding/product_ios/3x/gsa_ios_60dp.png"
+    },
+    {
+        "domains": [
+            "google.com.sg"
+        ],
+        "image_url": "https://www.google.com.sg/images/branding/product_ios/3x/gsa_ios_60dp.png"
     },
     {
         "domains": [
@@ -333,21 +303,33 @@
     },
     {
         "domains": [
-            "instructure.com"
+            "intuit.com"
         ],
-        "image_url": "https://www.instructure.com/themes/instructure_blog/images/favicon.ico"
-    },
-    {
-        "domains": [
-            "jianshu.com"
-        ],
-        "image_url": "https://cdn2.jianshu.io/assets/apple-touch-icons/152-bf209460fc1c17bfd3e2b84c8e758bc11ca3e570fd411c3bbd84149b97453b99.png"
+        "image_url": "https://www.intuit.com/content/dam/intuit/intuitcom/icons/favicons/apple-touch-icon-152x152.png"
     },
     {
         "domains": [
             "kompas.com"
         ],
         "image_url": "https://asset.kompas.com/data/2017/mobile/images/apple-touch-icon.png"
+    },
+    {
+        "domains": [
+            "line.me"
+        ],
+        "image_url": "https://line.me/apple-touch-icon-precomposed.png"
+    },
+    {
+        "domains": [
+            "liputan6.com"
+        ],
+        "image_url": "https://cdn-production-assets-kly.akamaized.net/assets/images/favicons/android-chrome-192x192.png"
+    },
+    {
+        "domains": [
+            "ltn.com.tw"
+        ],
+        "image_url": "https://news.ltn.com.tw/assets/images/all/ltn.png"
     },
     {
         "domains": [
@@ -363,9 +345,21 @@
     },
     {
         "domains": [
+            "medium.com"
+        ],
+        "image_url": "https://cdn-images-1.medium.com/fit/c/304/304/1*8I-HPL0bfoIzGied-dzOvA.png"
+    },
+    {
+        "domains": [
             "mercadolivre.com.br"
         ],
-        "image_url": "https://http2.mlstatic.com/ui/navigation/4.1.4/mercadolibre/152x152-precomposed.png"
+        "image_url": "https://http2.mlstatic.com/ui/navigation/4.4.4/mercadolibre/152x152-precomposed.png"
+    },
+    {
+        "domains": [
+            "mozilla.org"
+        ],
+        "image_url": "https://www.mozilla.org/media/img/favicon/favicon-196x196.c80e6abe0767.png"
     },
     {
         "domains": [
@@ -377,7 +371,7 @@
         "domains": [
             "naver.com"
         ],
-        "image_url": "https://s.pstatic.net/static/www/mobile/edit/2018/0626/mobile_191226315115.png"
+        "image_url": "https://s.pstatic.net/static/www/mobile/edit/2019/0520/mobile_ios_iphone_180180.png"
     },
     {
         "domains": [
@@ -417,12 +411,6 @@
     },
     {
         "domains": [
-            "otvfoco.com.br"
-        ],
-        "image_url": "https://static.otvfoco.com.br/2017/03/cropped-favicon-1-192x192.png"
-    },
-    {
-        "domains": [
             "paypal.com"
         ],
         "image_url": "https://www.paypalobjects.com/webstatic/icon/pp196.png"
@@ -438,12 +426,6 @@
             "pixnet.net"
         ],
         "image_url": "https://www.pixnet.net/icon-144x144.png"
-    },
-    {
-        "domains": [
-            "quizlet.com"
-        ],
-        "image_url": "https://quizlet.com/a/i/brandmark/1024.TGu7.png"
     },
     {
         "domains": [
@@ -465,6 +447,12 @@
     },
     {
         "domains": [
+            "setn.com"
+        ],
+        "image_url": "https://www.setn.com/m/settouch152.png"
+    },
+    {
+        "domains": [
             "shutterstock.com"
         ],
         "image_url": "https://www2.shutterstock.com/base/public/images/favicons/apple-touch-icon-114x114-83c9784481.png"
@@ -474,6 +462,12 @@
             "sina.com.cn"
         ],
         "image_url": "https://mjs.sinaimg.cn/wap/online/public/images/addToHome/sina_114x114_v1.png"
+    },
+    {
+        "domains": [
+            "sindonews.com"
+        ],
+        "image_url": "https://cloud-assets-z.sindonews.net/mobile/2016/images/icon/favicon-192x192.png"
     },
     {
         "domains": [
@@ -489,19 +483,14 @@
     },
     {
         "domains": [
-            "sogou.com"
-        ],
-        "image_url": "https://m.sogou.com/apple-touch-icon.png"
-    },
-    {
-        "domains": [
             "sohu.com"
         ],
         "image_url": "https://zmt.itc.cn/static/images/pic/sohu-logo/logo-144.png"
     },
     {
         "domains": [
-            "soso.com"
+            "soso.com",
+            "sogou.com"
         ],
         "image_url": "https://wap.sogou.com/apple-touch-icon.png"
     },
@@ -525,27 +514,21 @@
     },
     {
         "domains": [
-            "steamcommunity.com"
-        ],
-        "image_url": "https://steamcommunity.com/favicon.ico"
-    },
-    {
-        "domains": [
-            "taobao.com"
-        ],
-        "image_url": "https://gw.alicdn.com/tps/i2/TB1nmqyFFXXXXcQbFXXE5jB3XXX-114-114.png"
-    },
-    {
-        "domains": [
             "theguardian.com"
         ],
         "image_url": "https://assets.guim.co.uk/images/favicons/fee5e2d638d1c35f6d501fa397e53329/152x152.png"
     },
     {
         "domains": [
+            "thepiratebay.org"
+        ],
+        "image_url": "http://m.thepiratebay.org/images/apple-touch-icon-114x114.png"
+    },
+    {
+        "domains": [
             "thestartmagazine.com"
         ],
-        "image_url": "https://www.thestartmagazine.com/assets/favicon_196_196.png"
+        "image_url": "https://thestartmagazine.com/assets/favicon_196_196.png"
     },
     {
         "domains": [
@@ -555,15 +538,9 @@
     },
     {
         "domains": [
-            "tokopedia.com"
-        ],
-        "image_url": "https://ecs7.tokopedia.net/assets-tokopedia-lite/prod/icon512.png"
-    },
-    {
-        "domains": [
             "tribunnews.com"
         ],
-        "image_url": "http://cdn1.tstatic.net/img/icon/tribun-icon_128.png"
+        "image_url": "https://cdn1.tstatic.net/img/icon/tribun-icon_128.png"
     },
     {
         "domains": [
@@ -582,13 +559,19 @@
         "domains": [
             "twitter.com"
         ],
-        "image_url": "https://abs.twimg.com/responsive-web/web/icon-ios.8ea219d08eafdfa41.png"
+        "image_url": "https://abs.twimg.com/responsive-web/web/icon-ios.8ea219d08eafdfa44.png"
+    },
+    {
+        "domains": [
+            "udemy.com"
+        ],
+        "image_url": "https://www.udemy.com/staticx/udemy/images/v6/favicon-196x196.png"
     },
     {
         "domains": [
             "uol.com.br"
         ],
-        "image_url": "https://hp.imguol.com.br/c/home/layout/camaleao/mobile2017/icon-touch.png"
+        "image_url": "https://conteudo.imguol.com.br/c/home/layout/camaleao/mobile2017/icon-touch.png"
     },
     {
         "domains": [
@@ -618,7 +601,13 @@
         "domains": [
             "weibo.com"
         ],
-        "image_url": "https://h5.sinaimg.cn/upload/1005/453/2018/06/15/QQ20180615-0.jpg"
+        "image_url": "https://h5.sinaimg.cn/m/weibo-lite/appicon.png"
+    },
+    {
+        "domains": [
+            "wellsfargo.com"
+        ],
+        "image_url": "https://www.wellsfargo.com/assets/images/icons/icon-hires-192x192.png"
     },
     {
         "domains": [
@@ -630,7 +619,13 @@
         "domains": [
             "whatsapp.com"
         ],
-        "image_url": "https://static.whatsapp.net/rsrc.php/v3/yP/r/rYZqPCBaG70.png"
+        "image_url": "https://static.whatsapp.net/rsrc.php/v3/yP/r/rYZqPCBaG70.png?_nc_x=Ij3Wp8lg5Kz"
+    },
+    {
+        "domains": [
+            "wikihow.com"
+        ],
+        "image_url": "https://m.wikihow.com/favicon.ico"
     },
     {
         "domains": [
@@ -642,7 +637,7 @@
         "domains": [
             "wordpress.com"
         ],
-        "image_url": "https://0.gravatar.com/blavatar/653166773dc88127bd3afe0b6dfe5ea7?s=114&d=http%3A%2F%2Fs0.wp.com%2Fi%2Fwebclip.png"
+        "image_url": "https://0.gravatar.com/blavatar/653166773dc88127bd3afe0b6dfe5ea7?s=114&d=http%3A%2F%2Fs1.wp.com%2Fi%2Fwebclip.png"
     },
     {
         "domains": [
@@ -673,5 +668,17 @@
             "youtube.com"
         ],
         "image_url": "https://s.ytimg.com/yts/mobile/img/apple-touch-icon-144x144-precomposed-vflopw1IA.png"
+    },
+    {
+        "domains": [
+            "zendesk.com"
+        ],
+        "image_url": "https://d26a57ydsghvgx.cloudfront.net/www/public/assets/images/logos/zendesk144.png"
+    },
+    {
+        "domains": [
+            "zillow.com"
+        ],
+        "image_url": "https://www.zillow.com/apple-touch-icon.png"
     }
 ]
