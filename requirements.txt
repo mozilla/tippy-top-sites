@@ -1,4 +1,4 @@
 click==6.7
-Pillow==4.3.0
+Pillow==6.2.0
 requests==2.18.4
 robobrowser==0.5.3
