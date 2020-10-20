@@ -3,7 +3,7 @@ import hashlib
 
 
 def is_nsfw(domain):
-    md5 = base64.b64encode(hashlib.md5(domain).digest())
+    md5 = base64.b64encode(hashlib.md5(domain.encode('UTF-8')).digest())
     return md5 in nsfw_domains_md5
 
 

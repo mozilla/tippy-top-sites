@@ -1,9 +1,9 @@
 import json
 import logging
 import re
-import urlparse
 import zipfile
-from StringIO import StringIO
+from io import BytesIO, StringIO
+from urllib.parse import urljoin
 
 import click
 import requests
@@ -43,8 +43,8 @@ logging.basicConfig(filename='debug.log',level=logging.INFO)
 
 def _fetch_alexa_top_sites():
     r = requests.get(ALEXA_DATA_URL, timeout=60)
-    z = zipfile.ZipFile(StringIO(r.content))
-    rows = StringIO(z.read('top-1m.csv'))
+    z = zipfile.ZipFile(BytesIO(r.content))
+    rows = StringIO(z.read('top-1m.csv').decode('UTF-8'))
     for row in rows:
         rank, domain = row.split(',')
         yield (int(rank), domain.strip())
@@ -53,7 +53,7 @@ def _fetch_alexa_top_sites():
 def alexa_top_sites(count=1000):
     logging.info('Fetching Alexa top {count} sites'.format(count=count))
     top = _fetch_alexa_top_sites()
-    return [top.next() for x in xrange(count)]
+    return [next(top) for x in range(count)]
 
 
 def fetch_icons(url, user_agent=IPHONE_UA):
@@ -68,7 +68,7 @@ def fetch_icons(url, user_agent=IPHONE_UA):
             if icon_url.startswith('data:'):
                 continue
             if not icon_url.startswith('http') and not icon_url.startswith('//'):
-                icon['href'] = urlparse.urljoin(browser.url, icon_url)
+                icon['href'] = urljoin(browser.url, icon_url)
             icons.append(icon)
         for meta in browser.select(META_SELECTOR):
             icon = meta.attrs
@@ -76,7 +76,7 @@ def fetch_icons(url, user_agent=IPHONE_UA):
             if icon_url.startswith('data:'):
                 continue
             if not icon_url.startswith('http') and not icon_url.startswith('//'):
-                icon['href'] = urlparse.urljoin(browser.url, icon_url)
+                icon['href'] = urljoin(browser.url, icon_url)
             else:
                 icon['href'] = icon_url
             icons.append(icon)
@@ -109,7 +109,7 @@ def get_best_icon(images):
                 response = requests.get(url, headers={'User-agent': FIREFOX_UA}, timeout=60)
 
                 # Check if it's an SVG without a mask. Firefox doesn't support masked icons yet.
-                if response.headers.get('Content-Type') == 'image/svg+xml' and not 'mask' in image:
+                if response.headers.get('Content-Type') == 'image/svg+xml' and 'mask' not in image:
                     # If it is. We want it. We are done here.
                     return url
 
