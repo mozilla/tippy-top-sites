@@ -2,7 +2,7 @@
 Scripts and tools related to tippy top services 
 
 ## make_manifest.py
-To run the manifest generator script. In a new virtualenv:
+To run the manifest generator script (note this script only supports Python3). In a new virtualenv:
 
 ```
 $ pip install -r requirements.txt
