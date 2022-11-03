@@ -2,6 +2,7 @@ import json
 import logging
 import re
 import zipfile
+import csv
 from io import BytesIO, StringIO
 from urllib.parse import urljoin
 
@@ -49,15 +50,26 @@ def _fetch_alexa_top_sites():
         rank, domain = row.split(',')
         yield (int(rank), domain.strip())
 
+def _fetch_top_sites(topsitesfile):
+    with open(topsitesfile, newline='') as csvfile:
+        rows = csv.reader(csvfile)
+        for row in rows:
+            if len(row) == 0:
+                # skip empty lines
+                continue
+            yield (row[0], row[1])
 
-def alexa_top_sites(count=1000):
-    logging.info('Fetching Alexa top {count} sites'.format(count=count))
-    top = _fetch_alexa_top_sites()
-    return [next(top) for x in range(count)]
-
+def top_sites(topsitesfile, count):
+    logging.info(f'Fetching top {count} sites')
+    top_sites_generator = None
+    if topsitesfile:
+        top_sites_generator = _fetch_top_sites(topsitesfile)
+    else:
+        top_sites_generator = _fetch_alexa_top_sites()
+    return [next(top_sites_generator) for x in range(count)]
 
 def fetch_icons(url, user_agent=IPHONE_UA):
-    logging.info('Fetching icons for {url}'.format(url=url))
+    logging.info(f'Fetching icons for {url}')
     icons = []
     browser = RoboBrowser(user_agent=user_agent, parser='html.parser')
     try:
@@ -92,7 +104,7 @@ def fix_url(url):
     return fixed
 
 
-def get_best_icon(images):
+def get_best_icon(minwidth, images):
     image_url = None
     image_width = 0
     for image in images:
@@ -121,16 +133,15 @@ def get_best_icon(images):
             image_url = url
             image_width = width
 
-    if image_width < 96:
-        # We don't want any images under 96px
+    if image_width < minwidth:
+        # We don't want any images under specified resolution
         image_url = None
 
     return image_url
 
-
-def collect_icons_for_alexa_top(count, extra_domains=None):
+def collect_icons_for_top_sites(minwidth, topsitesfile, count, extra_domains=None):
     results = []
-    for rank, hostname in alexa_top_sites(count) + [(-1, x) for x in extra_domains or []]:
+    for rank, hostname in top_sites(topsitesfile, count) + [(-1, x) for x in extra_domains or []]:
         # Skip NSFW and blacklisted sites
         if is_nsfw(hostname) or hostname in DOMAIN_BLACKLIST:
             continue
@@ -141,32 +152,35 @@ def collect_icons_for_alexa_top(count, extra_domains=None):
             # Retry with http
             url = 'http://{hostname}'.format(hostname=hostname)
             icons = fetch_icons(url)
+        best_icon_url = get_best_icon(minwidth, icons)
         results.append({
             'hostname': hostname,
             'url': url,
             'icons': icons,
             'rank': rank,
-            'best_icon': get_best_icon(icons)
+            'best_icon': best_icon_url
         })
     logging.info('Done fetching icons')
     return results
 
 
 @click.command()
-@click.option('--count', default=10, help='Number of sites from Alexa Top Sites')
+@click.option('--count', default=10, help='Number of sites from a list of Top Sites that should be used to generate the manifest. Default is 10.')
+@click.option('--topsitesfile', type=click.Path(exists=True), help='A csv file containing comma separated rank and domain information (in the same order) of the Top Sites. If no file is provided then Alexa Top Sites are used.')
+@click.option('--minwidth', default=96, help='Minimum width of the site icon. Only those sites that satisfy this requirement are added to the manifest. Default is 96.')
 @click.option('--loadrawsitedata', help='Load the full data from the filename specified')
 @click.option('--saverawsitedata', help='Save the full data to the filename specified')
-def make_manifest(count, saverawsitedata, loadrawsitedata):
+def make_manifest(count, minwidth, topsitesfile, saverawsitedata, loadrawsitedata):
     results = []
 
     if loadrawsitedata:
-        logging.info('Loading raw icon data from {filename}'.format(filename=loadrawsitedata))
+        logging.info(f'Loading raw icon data from {loadrawsitedata}')
         with open(loadrawsitedata) as infile:
             sites_with_icons = json.loads(infile.read())
     else:
-        sites_with_icons = collect_icons_for_alexa_top(count, extra_domains=DOMAIN_WHITELIST);
+        sites_with_icons = collect_icons_for_top_sites(minwidth, topsitesfile, count, extra_domains=DOMAIN_WHITELIST);
         if saverawsitedata:
-            logging.info('Saving raw icon data to {filename}'.format(filename=saverawsitedata))
+            logging.info(f'Saving raw icon data to {saverawsitedata}')
             with open(saverawsitedata, 'w') as outfile:
                 json.dump(sites_with_icons, outfile, indent=4)
 
