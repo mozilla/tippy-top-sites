@@ -69,7 +69,7 @@ def top_sites(topsitesfile, count):
     return [next(top_sites_generator) for x in range(count)]
 
 def fetch_icons(url, user_agent=IPHONE_UA):
-    logging.info('Fetching icons for {url}'.format(url=url))
+    logging.info(f'Fetching icons for {url}')
     icons = []
     browser = RoboBrowser(user_agent=user_agent, parser='html.parser')
     try:
@@ -174,13 +174,13 @@ def make_manifest(count, minwidth, topsitesfile, saverawsitedata, loadrawsitedat
     results = []
 
     if loadrawsitedata:
-        logging.info('Loading raw icon data from {filename}'.format(filename=loadrawsitedata))
+        logging.info(f'Loading raw icon data from {loadrawsitedata}')
         with open(loadrawsitedata) as infile:
             sites_with_icons = json.loads(infile.read())
     else:
         sites_with_icons = collect_icons_for_top_sites(minwidth, topsitesfile, count, extra_domains=DOMAIN_WHITELIST);
         if saverawsitedata:
-            logging.info('Saving raw icon data to {filename}'.format(filename=saverawsitedata))
+            logging.info(f'Saving raw icon data to {saverawsitedata}')
             with open(saverawsitedata, 'w') as outfile:
                 json.dump(sites_with_icons, outfile, indent=4)
 
