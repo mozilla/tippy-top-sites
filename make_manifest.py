@@ -60,7 +60,7 @@ def _fetch_top_sites(topsitesfile):
             yield (row[0], row[1])
 
 def top_sites(topsitesfile, count):
-    logging.info('Fetching top {count} sites'.format(count=count))
+    logging.info(f'Fetching top {count} sites')
     top_sites_generator = None
     if topsitesfile:
         top_sites_generator = _fetch_top_sites(topsitesfile)
