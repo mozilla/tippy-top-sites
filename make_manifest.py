@@ -149,10 +149,14 @@ def collect_icons_for_top_sites(minwidth, topsitesfile, count, extra_domains=Non
 
         url = 'https://{hostname}'.format(hostname=hostname)
         icons = fetch_icons(url)
-        if len(icons) == 0:
-            # Retry with http
-            url = 'http://{hostname}'.format(hostname=hostname)
+        if len(icons) == 0 and 'www.' not in hostname:
+            # Retry with www. in the hostname as some domains require it explicitly.
+            url = 'https://www.{hostname}'.format(hostname=hostname)
             icons = fetch_icons(url)
+            if len(icons) == 0:
+                # Retry with http
+                url = 'http://{hostname}'.format(hostname=hostname)
+                icons = fetch_icons(url)
         best_icon_url = get_best_icon(minwidth, icons)
         results.append({
             'hostname': hostname,
