@@ -125,9 +125,10 @@ def get_best_icon(minwidth, images):
                     # If it is. We want it. We are done here.
                     return url
 
-                with Image.open(StringIO(response.content)) as img:
+                with Image.open(BytesIO(response.content)) as img:
                     width, _ = img.size
-            except:
+            except Exception as e:
+                logging.info(f'Exception: "{str(e)}" fetching (or opening) icon {url}')
                 pass
         if width and width > image_width:
             image_url = url
