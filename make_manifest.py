@@ -70,13 +70,8 @@ def top_sites(topsitesfile, count):
 
 def is_url_reachable(url):
     get = requests.get(url)
-    # if the request succeeds
-    if get.status_code == 200:
-        logging.info(f'{url} is reachable')
-        return True
-    else:
-        logging.info(f'{url} is NOT reachable')
-        return False
+    # Return True if the request succeeds, else False
+    return True if get.status_code == 200 else False
 
 def fetch_icons(url, user_agent=IPHONE_UA):
     logging.info(f'Fetching icons for {url}')
