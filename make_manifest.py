@@ -20,7 +20,7 @@ FIREFOX_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:58.0) Gecko/20100
 IPHONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Version/10.0 Mobile/14D27 Safari/602.1'
 ALEXA_DATA_URL = 'http://s3.amazonaws.com/alexa-static/top-1m.csv.zip'
 # Domains we want to exclude
-DOMAIN_BLACKLIST = [
+DOMAIN_EXCLUSION_LIST = [
     "higheurest.com",
     "blogspot.co.id",
     "pipeschannels.com",
@@ -34,7 +34,7 @@ DOMAIN_BLACKLIST = [
     "vebadu.com"
 ]
 # Additional domains we want to include
-DOMAIN_WHITELIST = [
+DOMAIN_INCLUSION_LIST = [
     "mail.google.com",
     "go.twitch.tv"
 ]
@@ -163,11 +163,16 @@ def get_best_icon(minwidth, images):
 
     return image_url
 
-def collect_icons_for_top_sites(minwidth, topsitesfile, count, extra_domains=None):
+def collect_icons_for_top_sites(minwidth, topsitesfile, count):
     results = []
+    extra_domains = None
+    if not topsitesfile:
+        # Add extra domains only if top site file is not provided by user
+        extra_domains = DOMAIN_INCLUSION_LIST
+
     for rank, hostname in top_sites(topsitesfile, count) + [(-1, x) for x in extra_domains or []]:
         # Skip NSFW and blacklisted sites
-        if is_nsfw(hostname) or hostname in DOMAIN_BLACKLIST:
+        if is_nsfw(hostname) or hostname in DOMAIN_EXCLUSION_LIST:
             continue
 
         url = 'https://{hostname}'.format(hostname=hostname)
@@ -203,7 +208,7 @@ def make_manifest(count, minwidth, topsitesfile, saverawsitedata, loadrawsitedat
         with open(loadrawsitedata) as infile:
             sites_with_icons = json.loads(infile.read())
     else:
-        sites_with_icons = collect_icons_for_top_sites(minwidth, topsitesfile, count, extra_domains=DOMAIN_WHITELIST);
+        sites_with_icons = collect_icons_for_top_sites(minwidth, topsitesfile, count)
         if saverawsitedata:
             logging.info(f'Saving raw icon data to {saverawsitedata}')
             with open(saverawsitedata, 'w') as outfile:
