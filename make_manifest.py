@@ -108,7 +108,7 @@ def fetch_icons(url, user_agent=IPHONE_UA):
     # Add the icon url if this is the case.
     default_favicon_url = url+"/favicon.ico"
     if is_url_reachable(default_favicon_url):
-        icons.append({"href":default_favicon_url})
+        icons.append({"href": default_favicon_url})
     return icons
 
 def fix_url(url):
