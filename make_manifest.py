@@ -120,11 +120,17 @@ def get_best_icon(minwidth, images):
             try:
                 response = requests.get(url, headers={'User-agent': FIREFOX_UA}, timeout=60)
 
-                # Check if it's an SVG without a mask. Firefox doesn't support masked icons yet.
-                if response.headers.get('Content-Type') == 'image/svg+xml' and 'mask' not in image:
-                    # If it is. We want it. We are done here.
-                    return url
-
+                # If it is an SVG, then return this as the best icon because SVG images are scalable,
+                # can be printed with high quality at any resolution and SVG graphics do NOT
+                # lose any quality if they are zoomed or resized.
+                if response.headers.get('Content-Type') == 'image/svg+xml':
+                    # Firefox doesn't support masked icons yet.
+                    if 'mask' not in image:
+                        # If it is not then we want it. We are done here.
+                        return url
+                    else:
+                        logging.info(f'SVG icon "{image}" is masked')
+                        continue
                 with Image.open(BytesIO(response.content)) as img:
                     width, _ = img.size
             except Exception as e:
