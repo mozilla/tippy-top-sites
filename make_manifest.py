@@ -106,7 +106,7 @@ def fetch_icons(url, user_agent=IPHONE_UA):
 
     # Some domains keep favicon in the their root with file name "favicon.ico".
     # Add the icon url if this is the case.
-    default_favicon_url = url+"/favicon.ico"
+    default_favicon_url = f"{url}/favicon.ico"
     if is_url_reachable(default_favicon_url):
         icons.append({"href": default_favicon_url})
     return icons
