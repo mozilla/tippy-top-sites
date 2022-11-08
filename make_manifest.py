@@ -126,7 +126,10 @@ def get_best_icon(minwidth, images):
                     return url
 
                 with Image.open(BytesIO(response.content)) as img:
-                    width, _ = img.size
+                    width, height = img.size
+                    if width != height:
+                        logging.info(f'icon shape "{width}*{height}" is not square')
+                        width = min(width, height)
             except Exception as e:
                 logging.info(f'Exception: "{str(e)}" fetching (or opening) icon {url}')
                 pass
@@ -190,6 +193,7 @@ def make_manifest(count, minwidth, topsitesfile, saverawsitedata, loadrawsitedat
         url = site.get('url')
         icon = site.get('best_icon')
         if icon is None:
+            logging.info(f'No icon found for "{url}"')
             continue
         existing = next((x for x in results if x.get('image_url') == icon), None)
         if existing:
