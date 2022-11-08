@@ -14,7 +14,7 @@ from robobrowser import RoboBrowser
 from nsfw import is_nsfw
 
 
-LINK_SELECTOR = 'link[rel=apple-touch-icon], link[rel=apple-touch-icon-precomposed], link[rel="icon shortcut"], link[rel="shortcut icon"], link[rel="icon"], link[rel="fluid-icon"]'
+LINK_SELECTOR = 'link[rel=apple-touch-icon], link[rel=apple-touch-icon-precomposed], link[rel="icon shortcut"], link[rel="shortcut icon"], link[rel="icon"], link[rel="SHORTCUT ICON"], link[rel="fluid-icon"]'
 META_SELECTOR = 'meta[name=apple-touch-icon]'
 FIREFOX_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:58.0) Gecko/20100101 Firefox/58.0'
 IPHONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Version/10.0 Mobile/14D27 Safari/602.1'
@@ -68,6 +68,14 @@ def top_sites(topsitesfile, count):
         top_sites_generator = _fetch_alexa_top_sites()
     return [next(top_sites_generator) for x in range(count)]
 
+def is_url_reachable(url):
+    try:
+        response = requests.get(url, headers={'User-agent': FIREFOX_UA}, timeout=60)
+        return True if response.status_code == 200 else False
+    except Exception as e:
+        logging.info(f'Exception: "{str(e)}" while checking if "{url}" is reachable or not')
+        return False
+
 def fetch_icons(url, user_agent=IPHONE_UA):
     logging.info(f'Fetching icons for {url}')
     icons = []
@@ -92,10 +100,16 @@ def fetch_icons(url, user_agent=IPHONE_UA):
             else:
                 icon['href'] = icon_url
             icons.append(icon)
-    except:
+    except Exception as e:
+        logging.info(f'Exception: "{str(e)}" while parsing icon urls from document')
         pass
-    return icons
 
+    # Some domains keep favicon in the their root with file name "favicon.ico".
+    # Add the icon url if this is the case.
+    default_favicon_url = f"{url}/favicon.ico"
+    if is_url_reachable(default_favicon_url):
+        icons.append({"href": default_favicon_url})
+    return icons
 
 def fix_url(url):
     fixed = url
@@ -120,11 +134,17 @@ def get_best_icon(minwidth, images):
             try:
                 response = requests.get(url, headers={'User-agent': FIREFOX_UA}, timeout=60)
 
-                # Check if it's an SVG without a mask. Firefox doesn't support masked icons yet.
-                if response.headers.get('Content-Type') == 'image/svg+xml' and 'mask' not in image:
-                    # If it is. We want it. We are done here.
-                    return url
-
+                # If it is an SVG, then return this as the best icon because SVG images are scalable,
+                # can be printed with high quality at any resolution and SVG graphics do NOT
+                # lose any quality if they are zoomed or resized.
+                if response.headers.get('Content-Type') == 'image/svg+xml':
+                    # Firefox doesn't support masked icons yet.
+                    if 'mask' not in image:
+                        # If it is not then we want it. We are done here.
+                        return url
+                    else:
+                        logging.info(f'SVG icon "{image}" is masked')
+                        continue
                 with Image.open(BytesIO(response.content)) as img:
                     width, _ = img.size
             except Exception as e:
