@@ -68,6 +68,14 @@ def top_sites(topsitesfile, count):
         top_sites_generator = _fetch_alexa_top_sites()
     return [next(top_sites_generator) for x in range(count)]
 
+def is_url_reachable(url):
+    try:
+        response = requests.get(url, headers={'User-agent': FIREFOX_UA}, timeout=60)
+        return True if response.status_code == 200 else False
+    except Exception as e:
+        logging.info(f'Exception: "{str(e)}" while checking if "{url}" is reachable or not')
+        return False
+
 def fetch_icons(url, user_agent=IPHONE_UA):
     logging.info(f'Fetching icons for {url}')
     icons = []
@@ -92,10 +100,16 @@ def fetch_icons(url, user_agent=IPHONE_UA):
             else:
                 icon['href'] = icon_url
             icons.append(icon)
-    except:
+    except Exception as e:
+        logging.info(f'Exception: "{str(e)}" while parsing icon urls from document')
         pass
-    return icons
 
+    # Some domains keep favicon in the their root with file name "favicon.ico".
+    # Add the icon url if this is the case.
+    default_favicon_url = f"{url}/favicon.ico"
+    if is_url_reachable(default_favicon_url):
+        icons.append({"href": default_favicon_url})
+    return icons
 
 def fix_url(url):
     fixed = url
