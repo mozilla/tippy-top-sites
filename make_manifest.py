@@ -19,6 +19,7 @@ META_SELECTOR = 'meta[name=apple-touch-icon]'
 FIREFOX_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:58.0) Gecko/20100101 Firefox/58.0'
 IPHONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Version/10.0 Mobile/14D27 Safari/602.1'
 ALEXA_DATA_URL = 'http://s3.amazonaws.com/alexa-static/top-1m.csv.zip'
+SVG_ICON_WIDTH = "SVG_ICON_WIDTH"
 # Domains we want to exclude
 DOMAIN_BLACKLIST = [
     "higheurest.com",
@@ -118,7 +119,7 @@ def fix_url(url):
     return fixed
 
 
-def get_best_icon(minwidth, images):
+def get_best_icon(images):
     image_url = None
     image_width = 0
     for image in images:
@@ -141,7 +142,7 @@ def get_best_icon(minwidth, images):
                     # Firefox doesn't support masked icons yet.
                     if 'mask' not in image:
                         # If it is not then we want it. We are done here.
-                        return url
+                        return (url, SVG_ICON_WIDTH)
                     else:
                         logging.info(f'SVG icon "{image}" is masked')
                         continue
@@ -157,13 +158,9 @@ def get_best_icon(minwidth, images):
             image_url = url
             image_width = width
 
-    if image_width < minwidth:
-        # We don't want any images under specified resolution
-        image_url = None
+    return (image_url, image_width)
 
-    return image_url
-
-def collect_icons_for_top_sites(minwidth, topsitesfile, count, extra_domains=None):
+def collect_icons_for_top_sites(topsitesfile, count):
     results = []
     for rank, hostname in top_sites(topsitesfile, count) + [(-1, x) for x in extra_domains or []]:
         # Skip NSFW and blacklisted sites
@@ -177,13 +174,14 @@ def collect_icons_for_top_sites(minwidth, topsitesfile, count, extra_domains=Non
             url = f"https://www.{hostname}"
             icons = fetch_icons(url)
 
-        best_icon_url = get_best_icon(minwidth, icons)
+        best_icon_url, best_icon_width = get_best_icon(icons)
         results.append({
             'hostname': hostname,
             'url': url,
             'icons': icons,
             'rank': rank,
-            'best_icon': best_icon_url
+            'best_icon_url': best_icon_url,
+            'best_icon_width': best_icon_width
         })
     logging.info('Done fetching icons')
     return results
@@ -203,7 +201,7 @@ def make_manifest(count, minwidth, topsitesfile, saverawsitedata, loadrawsitedat
         with open(loadrawsitedata) as infile:
             sites_with_icons = json.loads(infile.read())
     else:
-        sites_with_icons = collect_icons_for_top_sites(minwidth, topsitesfile, count, extra_domains=DOMAIN_WHITELIST);
+        sites_with_icons = collect_icons_for_top_sites(topsitesfile, count)
         if saverawsitedata:
             logging.info(f'Saving raw icon data to {saverawsitedata}')
             with open(saverawsitedata, 'w') as outfile:
@@ -212,9 +210,12 @@ def make_manifest(count, minwidth, topsitesfile, saverawsitedata, loadrawsitedat
     for site in sites_with_icons:
         hostname = site.get('hostname')
         url = site.get('url')
-        icon = site.get('best_icon')
-        if icon is None:
-            logging.info(f'No icon found for "{url}"')
+        icon = site.get('best_icon_url')
+        icon_width = site.get('best_icon_width')
+
+        # check if there is a best icon that satisfies the minwidth criteria
+        if (icon is None) or ((icon_width != SVG_ICON_WIDTH) and (icon_width < minwidth)):
+            logging.info(f'No icon for "{url}" (best icon width: {icon_width})')
             continue
         existing = next((x for x in results if x.get('image_url') == icon), None)
         if existing:
