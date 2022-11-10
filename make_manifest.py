@@ -21,7 +21,7 @@ IPHONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKi
 ALEXA_DATA_URL = 'http://s3.amazonaws.com/alexa-static/top-1m.csv.zip'
 SVG_ICON_WIDTH = "SVG_ICON_WIDTH"
 # Domains we want to exclude
-DOMAIN_BLACKLIST = [
+DOMAIN_EXCLUSION_LIST = [
     "higheurest.com",
     "blogspot.co.id",
     "pipeschannels.com",
@@ -35,7 +35,7 @@ DOMAIN_BLACKLIST = [
     "vebadu.com"
 ]
 # Additional domains we want to include
-DOMAIN_WHITELIST = [
+DOMAIN_INCLUSION_LIST = [
     "mail.google.com",
     "go.twitch.tv"
 ]
@@ -105,11 +105,15 @@ def fetch_icons(url, user_agent=IPHONE_UA):
         logging.info(f'Exception: "{str(e)}" while parsing icon urls from document')
         pass
 
-    # Some domains keep favicon in the their root with file name "favicon.ico".
+    # If the document doesn't specify favicon via rel attribute of link tag then check
+    # if "favicon.ico" file is present in the root of the domain as some domains keep
+    # favicon in their root without specifying them in the document.
     # Add the icon url if this is the case.
-    default_favicon_url = f"{url}/favicon.ico"
-    if is_url_reachable(default_favicon_url):
-        icons.append({"href": default_favicon_url})
+    if len(icons) == 0:
+        default_favicon_url = f"{url}/favicon.ico"
+        if is_url_reachable(default_favicon_url):
+            icons.append({"href": default_favicon_url})
+
     return icons
 
 def fix_url(url):
@@ -162,9 +166,14 @@ def get_best_icon(images):
 
 def collect_icons_for_top_sites(topsitesfile, count):
     results = []
+    extra_domains = None
+    if not topsitesfile:
+        # Add extra domains only if top site file is not provided by user
+        extra_domains = DOMAIN_INCLUSION_LIST
+
     for rank, hostname in top_sites(topsitesfile, count) + [(-1, x) for x in extra_domains or []]:
         # Skip NSFW and blacklisted sites
-        if is_nsfw(hostname) or hostname in DOMAIN_BLACKLIST:
+        if is_nsfw(hostname) or hostname in DOMAIN_EXCLUSION_LIST:
             continue
 
         url = 'https://{hostname}'.format(hostname=hostname)
