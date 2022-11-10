@@ -104,11 +104,15 @@ def fetch_icons(url, user_agent=IPHONE_UA):
         logging.info(f'Exception: "{str(e)}" while parsing icon urls from document')
         pass
 
-    # Some domains keep favicon in the their root with file name "favicon.ico".
+    # If the document doesn't specify favicon via rel attribute of link tag then check
+    # if "favicon.ico" file is present in the root of the domain as some domains keep
+    # favicon in their root without specifying them in the document.
     # Add the icon url if this is the case.
-    default_favicon_url = f"{url}/favicon.ico"
-    if is_url_reachable(default_favicon_url):
-        icons.append({"href": default_favicon_url})
+    if len(icons) == 0:
+        default_favicon_url = f"{url}/favicon.ico"
+        if is_url_reachable(default_favicon_url):
+            icons.append({"href": default_favicon_url})
+
     return icons
 
 def fix_url(url):
