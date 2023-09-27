@@ -1,0 +1,16 @@
+1,mail.google.com
+2,go.twitch.tv
+3,amazon.ca
+4,amazon.cn
+5,amazon.co.jp
+6,amazon.co.uk
+7,amazon.com
+8,amazon.com.au
+9,amazon.com.br
+10,amazon.com.mx
+11,amazon.de
+12,amazon.es
+13,amazon.fr
+14,amazon.in
+15,amazon.it
+16,github.com

@@ -34,11 +34,6 @@ DOMAIN_EXCLUSION_LIST = [
     "fedsit.com",
     "vebadu.com"
 ]
-# Additional domains we want to include
-DOMAIN_INCLUSION_LIST = [
-    "mail.google.com",
-    "go.twitch.tv"
-]
 
 logging.basicConfig(filename='debug.log',level=logging.INFO)
 
@@ -68,6 +63,12 @@ def top_sites(topsitesfile, count):
     else:
         top_sites_generator = _fetch_alexa_top_sites()
     return [next(top_sites_generator) for x in range(count)]
+
+def extra_sites(extrafile):
+    logging.info(f'Fetching extra sites')
+    extra_sites_generator = None
+    extra_sites_generator = _fetch_top_sites(extrafile)
+    return list(extra_sites_generator)
 
 def is_url_reachable(url):
     try:
@@ -164,14 +165,14 @@ def get_best_icon(images):
 
     return (image_url, image_width)
 
-def collect_icons_for_top_sites(topsitesfile, count):
+def collect_icons_for_top_sites(topsitesfile, extrafile, count):
     results = []
-    extra_domains = None
-    if not topsitesfile:
-        # Add extra domains only if top site file is not provided by user
-        extra_domains = DOMAIN_INCLUSION_LIST
+    extra_domains = []
+    if extrafile:
+        # Add extra domains if extra file is provided by user
+        extra_domains = extra_sites(extrafile)
 
-    for rank, hostname in top_sites(topsitesfile, count) + [(-1, x) for x in extra_domains or []]:
+    for rank, hostname in top_sites(topsitesfile, count) + extra_domains:
         # Skip NSFW and blacklisted sites
         if is_nsfw(hostname) or hostname in DOMAIN_EXCLUSION_LIST:
             continue
@@ -199,10 +200,11 @@ def collect_icons_for_top_sites(topsitesfile, count):
 @click.command()
 @click.option('--count', default=10, help='Number of sites from a list of Top Sites that should be used to generate the manifest. Default is 10.')
 @click.option('--topsitesfile', type=click.Path(exists=True), help='A csv file containing comma separated rank and domain information (in the same order) of the Top Sites. If no file is provided then Alexa Top Sites are used.')
+@click.option('--extrafile', type=click.Path(exists=True), help='A csv file containing domain information of extra top sites. If no file is provided then no extra Top Sites.')
 @click.option('--minwidth', default=96, help='Minimum width of the site icon. Only those sites that satisfy this requirement are added to the manifest. Default is 96.')
 @click.option('--loadrawsitedata', help='Load the full data from the filename specified')
 @click.option('--saverawsitedata', help='Save the full data to the filename specified')
-def make_manifest(count, minwidth, topsitesfile, saverawsitedata, loadrawsitedata):
+def make_manifest(count, minwidth, topsitesfile, extrafile, saverawsitedata, loadrawsitedata):
     results = []
 
     if loadrawsitedata:
@@ -210,7 +212,7 @@ def make_manifest(count, minwidth, topsitesfile, saverawsitedata, loadrawsitedat
         with open(loadrawsitedata) as infile:
             sites_with_icons = json.loads(infile.read())
     else:
-        sites_with_icons = collect_icons_for_top_sites(topsitesfile, count)
+        sites_with_icons = collect_icons_for_top_sites(topsitesfile, extrafile, count)
         if saverawsitedata:
             logging.info(f'Saving raw icon data to {saverawsitedata}')
             with open(saverawsitedata, 'w') as outfile:
